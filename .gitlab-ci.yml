@@ -14,15 +14,9 @@ services:
   - docker:dind
 
 variables:
-  USER: '-u$MYSQL_USER'
-  PASS: '-p$MYSQL_PASS'
   SCRIPT_CREATE_DATABASE: 'mysql -u$MYSQL_USER -p$MYSQL_PASS -e "CREATE DATABASE $LOUVRE_DATABASE_NAME;"'
-
-job:
-  script:
-    - echo 'skip test'
-  only:
-    - server_config
+  SCRIPT_CREATE_USER: 'mysql -u$MYSQL_USER -p$MYSQL_PASS -e "CREATE USER \"$LOUVRE_MYSQL_USER\"@\"$LOUVRE_MYSQL_HOST\" IDENTIFIED BY \"$LOUVRE_MYSQL_PASS\";"'
+  SCRIPT_GRANT_PRIVILEGES: 'mysql -u$MYSQL_USER -p$MYSQL_PASS -e "GRANT ALL PRIVILEGES ON \"$LOUVRE_DATABASE_NAME\".* TO \"$LOUVRE_MYSQL_USER\"@\"$LOUVRE_MYSQL_HOST\";"'
 
 stages:
 - test
@@ -32,9 +26,6 @@ stages:
 test:
   stage: test
   script:
-  - echo $USER
-  - echo $PASS
-  - echo $SCRIPT_CREATE_DATABASE
   - apt-get update -yqq
   - apt-get install -yqq git libmcrypt-dev libpq-dev libcurl4-gnutls-dev libicu-dev libvpx-dev libjpeg-dev libpng-dev libxpm-dev zlib1g-dev libfreetype6-dev libxml2-dev libexpat1-dev libbz2-dev libgmp3-dev libldap2-dev unixodbc-dev libsqlite3-dev libaspell-dev libsnmp-dev libpcre3-dev libtidy-dev
   - docker-php-ext-install mbstring mcrypt pdo_pgsql curl json intl gd xml zip bz2 opcache
@@ -56,9 +47,8 @@ server_config:
         - echo $SCRIPT_CREATE_DATABASE
         - echo $LOUVRE_DATABASE_NAME
         - ssh $SERVER_USER@$SERVER_HOST $SCRIPT_CREATE_DATABASE
-        - ssh $SERVER_USER@$SERVER_HOST 'mysql -u $MYSQL_USER $PASS -e "CREATE USER \"$LOUVRE_MYSQL_USER\"@\"$LOUVRE_MYSQL_HOST\" IDENTIFIED BY \"$LOUVRE_MYSQL_PASS\";"'
-        # GRANT PRIVILEGES #
-        - ssh $SERVER_USER@$SERVER_HOST 'mysql -u $MYSQL_USER $PASS -e "GRANT ALL PRIVILEGES ON \"$LOUVRE_DATABASE_NAME\".* TO \"$LOUVRE_MYSQL_USER\"@\"$LOUVRE_MYSQL_HOST\";"'
+        - ssh $SERVER_USER@$SERVER_HOST $SCRIPT_CREATE_USER
+        - ssh $SERVER_USER@$SERVER_HOST $SCRIPT_GRANT_PRIVILEGES
         - ssh $SERVER_USER@$SERVER_HOST "set APP_ENV = $APP_ENV && set DATABASE_URL=mysql://$LOUVRE_MYSQL_USER:$LOUVRE_MYSQL_PASS@$LOUVRE_MYSQL_HOST:$LOUVRE_MYSQL_PORT/$PROJECT_NAME"
         - ssh $SERVER_USER@$SERVER_HOST "mkdir -p /var/www/html/$PROJECT_NAME"
         - ssh $SERVER_USER@$SERVER_HOST "chown -hR $SERVER_USER:root /var/www/html/$PROJECT_NAME && chmod -R 777 /var/www/html/$PROJECT_NAME"
