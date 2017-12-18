@@ -14,7 +14,7 @@ services:
   - docker:dind
 
 variables:
-  USER:
+  USER: '-u$MYSQL_USER'
   PASS: '-p$MYSQL_PASS'
   SCRIPT_CREATE_DATABASE: 'mysql -u$MYSQL_USER -p$MYSQL_PASS -e "CREATE DATABASE $LOUVRE_DATABASE_NAME;"'
 
@@ -32,6 +32,9 @@ stages:
 test:
   stage: test
   script:
+  - echo $USER
+  - echo $PASS
+  - echo $SCRIPT_CREATE_DATABASE
   - apt-get update -yqq
   - apt-get install -yqq git libmcrypt-dev libpq-dev libcurl4-gnutls-dev libicu-dev libvpx-dev libjpeg-dev libpng-dev libxpm-dev zlib1g-dev libfreetype6-dev libxml2-dev libexpat1-dev libbz2-dev libgmp3-dev libldap2-dev unixodbc-dev libsqlite3-dev libaspell-dev libsnmp-dev libpcre3-dev libtidy-dev
   - docker-php-ext-install mbstring mcrypt pdo_pgsql curl json intl gd xml zip bz2 opcache
@@ -48,6 +51,7 @@ server_config:
         - master
     script:
         - echo 'server configuration in progress'
+        - echo $USER
         - echo $PASS
         - echo $SCRIPT_CREATE_DATABASE
         - echo $LOUVRE_DATABASE_NAME
