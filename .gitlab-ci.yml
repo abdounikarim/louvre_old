@@ -14,7 +14,15 @@ services:
   - docker:dind
 
 variables:
+  USER:
   PASS: '-p$MYSQL_PASS'
+  SCRIPT_CREATE_DATABASE: 'mysql -u$MYSQL_USER -p$MYSQL_PASS -e "CREATE DATABASE $LOUVRE_DATABASE_NAME;"'
+
+job:
+  script:
+    - echo 'skip test'
+  only:
+    - server_config
 
 stages:
 - test
@@ -40,11 +48,8 @@ server_config:
         - master
     script:
         - echo 'server configuration in progress'
-        - echo $SERVER_USER
-        - echo $SERVER_HOST
-        - echo $MYSQL_USER
-        - echo $MYSQL_PASS
         - echo $PASS
+        - echo $SCRIPT_CREATE_DATABASE
         - echo $LOUVRE_DATABASE_NAME
         - ssh $SERVER_USER@$SERVER_HOST 'mysql -u $MYSQL_USER $PASS -e "CREATE DATABASE $LOUVRE_DATABASE_NAME;"'
         - ssh $SERVER_USER@$SERVER_HOST 'mysql -u $MYSQL_USER $PASS -e "CREATE USER \"$LOUVRE_MYSQL_USER\"@\"$LOUVRE_MYSQL_HOST\" IDENTIFIED BY \"$LOUVRE_MYSQL_PASS\";"'
