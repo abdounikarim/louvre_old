@@ -13,8 +13,11 @@ before_script:
 services:
   - docker:dind
 
+variables:
+  - PASS: "-p"$MYSQL_PASS
+
 stages:
-- test
+#- test
 - server_config
 - deploy
 
@@ -41,6 +44,7 @@ server_config:
         - echo $SERVER_HOST
         - echo $MYSQL_USER
         - echo $MYSQL_PASS
+        - echo ${PASS}
         - echo $LOUVRE_DATABASE_NAME
         - ssh $SERVER_USER@$SERVER_HOST 'mysql -u $MYSQL_USER -p $MYSQL_PASS -e "CREATE DATABASE $LOUVRE_DATABASE_NAME;"'
         - ssh $SERVER_USER@$SERVER_HOST 'mysql -u $MYSQL_USER -p$MYSQL_PASS -e "CREATE USER \"$LOUVRE_MYSQL_USER\"@\"$LOUVRE_MYSQL_HOST\" IDENTIFIED BY \"$LOUVRE_MYSQL_PASS\";"'
