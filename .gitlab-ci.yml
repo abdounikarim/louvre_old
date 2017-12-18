@@ -14,10 +14,9 @@ services:
   - docker:dind
 
 variables:
-  - PASS: "-p"$MYSQL_PASS
+  PASS: "-p"$MYSQL_PASS
 
 stages:
-#- test
 - server_config
 - deploy
 
