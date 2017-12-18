@@ -17,6 +17,7 @@ variables:
   PASS: '-p$MYSQL_PASS'
 
 stages:
+- test
 - server_config
 - deploy
 
