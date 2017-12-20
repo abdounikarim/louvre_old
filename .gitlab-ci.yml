@@ -42,6 +42,7 @@ server_config:
         - master
     script:
         - echo 'server configuration in progress'
+        - ssh $SERVER_USER@$SERVER_HOST "rm -rf /etc/environment"
         - ssh $SERVER_USER@$SERVER_HOST $SCRIPT_CREATE_DATABASE
         - ssh $SERVER_USER@$SERVER_HOST $SCRIPT_CREATE_USER
         - ssh $SERVER_USER@$SERVER_HOST $SCRIPT_GRANT_PRIVILEGES
@@ -56,6 +57,7 @@ deploy:
     script:
         - echo 'Deployment in progress'
         - scp -r ./* $SERVER_USER@$SERVER_HOST:/var/www/html/$PROJECT_NAME
+        - ssh $SERVER_USER@$SERVER_HOST "mv /var/www/html/$PROJECT_NAME/environment /etc/environment"
         - ssh $SERVER_USER@$SERVER_HOST "cd /var/www/html/$PROJECT_NAME && export SYMFONY_ENV=prod && export APP_ENV=prod && composer install --no-dev --optimize-autoloader"
         - echo 'Dependencies installed'
         - ssh $SERVER_USER@$SERVER_HOST "mv /var/www/html/$PROJECT_NAME/$PROJECT_NAME.conf /etc/apache2/sites-enabled/$PROJECT_NAME.conf && service apache2 restart"
