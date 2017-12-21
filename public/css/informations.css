@@ -1,0 +1,13 @@
+.glyphicon-triangle-bottom{
+    transition:transform 180ms ease-in;
+}
+.glyphicon-triangle-bottom.rotate-180{
+    transform: rotate(180deg);
+    transition:transform 180ms ease-in;
+}
+
+/* FORM */
+#ui-datepicker-div{
+    background-color: #337ab7;
+}
+
