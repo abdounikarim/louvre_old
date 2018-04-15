@@ -23,6 +23,12 @@ class DefaultControllerTest extends WebTestCase
 
         //echo $client->getResponse()->getContent();die();
 
+        $this->assertInstanceOf(Booking::class, $booking);
+        $date = date('16/04/2018');
+        $this->assertEquals($date, $booking->getVisitDay());
+        $this->assertGreaterThanOrEqual(1, $booking->getTicketNumber());
+        $this->assertEquals("J", $booking->getTicketType());
+        $this->assertEquals("abdounikarim@gmail.com", $booking->getMail());
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
 }
