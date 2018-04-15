@@ -21,13 +21,14 @@ class BookingTest extends TestCase
 
     public function testVisitDayIsTodayOrAfter()
     {
-        $this->booking->setVisitDay(new \DateTime());
+        //Booking Entity Constructor initialize a new \DateTime()
+        $this->assertInstanceOf(\DateTime::class, $this->booking->getVisitDay());
         $this->assertLessThanOrEqual(new \DateTime(), $this->booking->getVisitDay());
     }
 
     public function testNumberOfTicketsIsNotNull()
     {
-        $this->booking->setTicketNumber(1);
+        //Booking Entity Constructor initialize a quantity to 1 by default
         $this->assertEquals(1, $this->booking->getTicketNumber());
         $this->assertSame(1, $this->booking->getTicketNumber());
         $this->assertLessThanOrEqual(1, $this->booking->getTicketNumber());
