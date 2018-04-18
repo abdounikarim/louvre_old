@@ -17,19 +17,9 @@ class Booking
     private $id;
 
     /**
-     * @ORM\Column(type="date")
-     */
-    private $visitDay;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $ticketNumber;
-
-    /**
-     * @ORM\Column(type="string", length=1)
-     */
-    private $ticketType;
 
     /**
      * @ORM\Column(type="string", unique=true)
@@ -43,12 +33,10 @@ class Booking
 
     /**
      * Booking constructor.
-     * @param $visitDay
      * @param $ticketNumber
      */
     public function __construct()
     {
-        $this->visitDay = new \DateTime();
         $this->ticketNumber = 1;
     }
 
@@ -71,22 +59,6 @@ class Booking
     /**
      * @return mixed
      */
-    public function getVisitDay()
-    {
-        return $this->visitDay;
-    }
-
-    /**
-     * @param mixed $visitDay
-     */
-    public function setVisitDay($visitDay)
-    {
-        $this->visitDay = $visitDay;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getTicketNumber()
     {
         return $this->ticketNumber;
@@ -98,22 +70,6 @@ class Booking
     public function setTicketNumber($ticketNumber)
     {
         $this->ticketNumber = $ticketNumber;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTicketType()
-    {
-        return $this->ticketType;
-    }
-
-    /**
-     * @param mixed $ticketType
-     */
-    public function setTicketType($ticketType)
-    {
-        $this->ticketType = $ticketType;
     }
 
     /**

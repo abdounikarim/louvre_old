@@ -19,30 +19,8 @@ class BookingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('visitDay',DateType::class,[
-                'label' => 'Jour de la visite',
-                'html5' => false,
-                'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy',
-                'model_timezone' => 'Europe/Paris',
-                'attr' => ['class' => 'datepicker', 'readonly' => 'readonly'],
-                'invalid_message' => "La date saisie est invalide",
-                'constraints' => [
-                    new NotBlank(array('message' => "Merci de saisir une date valide")),
-                    new GreaterThanOrEqual(array('value' => 'today', 'message' => 'La date est incorrecte')),
-                    new CheckDate()
-                ]
-
-            ])
             ->add('ticketNumber', IntegerType::class, [
                 'label' => 'Nombre de tickets'
-            ])
-            ->add('ticketType', ChoiceType::class, [
-                'label' => 'Type de ticket',
-                'choices' => [
-                    'Demi-Journée' => 'D',
-                    'Journée' => 'J'
-                ]
             ])
             ->add('mail', EmailType::class, [
                 'label' => 'Adresse mail'

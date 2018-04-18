@@ -33,9 +33,7 @@ class BookingTypeTest extends TypeTestCase
     public function testSubmitValidData()
     {
         $formData = [
-            'visitDay' => '02/01/2020',
             'ticketNumber' => 1,
-            'ticketType' => "J",
             'mail' => "abdounikarim@gmail.com"
         ];
 
